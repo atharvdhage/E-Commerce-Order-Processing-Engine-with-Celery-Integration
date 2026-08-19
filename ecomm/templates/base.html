@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}E-Commerce Engine{% endblock %}</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 0; padding: 0; background-color: #f4f4f9; }
+        header { background-color: #333; color: white; padding: 1rem; display: flex; justify-content: space-between; }
+        header a { color: white; text-decoration: none; margin-left: 15px; }
+        .container { max-width: 1200px; margin: 20px auto; padding: 20px; background: white; border-radius: 8px; }
+        .messages { color: red; font-weight: bold; }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div>
+            <strong>E-Commerce V1</strong>
+        </div>
+        <nav>
+            <!-- We will link these to your Django URLs later -->
+            <a href="/">Catalog</a>
+            <a href="/cart/">My Cart</a>
+        </nav>
+    </header>
+
+    <div class="container">
+        <!-- Display Django messages (e.g., "Not enough stock" errors) -->
+        {% if messages %}
+            <ul class="messages">
+                {% for message in messages %}
+                    <li>{{ message }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+
+        <!-- Child templates will inject their content here -->
+        {% block content %}
+        {% endblock %}
+    </div>
+
+</body>
+</html>
