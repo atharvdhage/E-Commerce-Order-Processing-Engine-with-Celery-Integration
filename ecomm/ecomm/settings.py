@@ -82,7 +82,7 @@ WSGI_APPLICATION = 'ecomm.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/6.1/ref/settings/#databases
 
-DATABASES = { }
+ DATABASES = { 'default': dj_database_url.config(conn_max_age=600) }
 
 
 # Password validation
