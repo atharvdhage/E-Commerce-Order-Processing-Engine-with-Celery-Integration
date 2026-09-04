@@ -62,12 +62,23 @@ MIDDLEWARE = [
 ROOT_URLCONF = 'ecomm.urls'
 
 TEMPLATES = [
+    # Engine 1: Jinja2 for your custom frontend UI
     {
-        'BACKEND': 'django.template.backends.django.DjangoTemplates',
+        'BACKEND': 'django.template.backends.jinja2.Jinja2',
         'DIRS': [BASE_DIR / 'templates'],
         'APP_DIRS': True,
         'OPTIONS': {
+            'environment': 'ecomm.jinja_env.environment', 
+        },
+    },
+    # Engine 2: Default Django engine for the Admin panel and Auth
+    {
+        'BACKEND': 'django.template.backends.django.DjangoTemplates',
+        'DIRS': [BASE_DIR / 'templates'], 
+        'APP_DIRS': True,
+        'OPTIONS': {
             'context_processors': [
+                'django.template.context_processors.debug',
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
@@ -159,3 +170,10 @@ MAILERS = {
         'BACKEND': 'django.core.mail.backends.console.EmailBackend',
     },
 }
+
+CELERY_BROKER_URL = os.environ.get(
+    'REDIS_URL', 
+    'redis://default:sjAISxFtMbGpmbGLSCHoFUVaIUnowDgX@redis.railway.internal:6379' 
+)
+CELERY_ACCEPT_CONTENT = ['json']
+CELERY_TASK_SERIALIZER = 'json'

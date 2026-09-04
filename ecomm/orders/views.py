@@ -53,11 +53,15 @@ def process_payment(request, order_id):
     if request.method == 'POST':
         order = get_object_or_404(Order, id=order_id, user=request.user)
         
-        # In a real app, you would ping Stripe or Razorpay here.
-        # For now, we simulate a successful transaction:
         if order.status == 'PENDING':
             order.status = 'SUCCESS'
-            order.save()
+            order.save() # The transaction is locked in
+            
+            # V3: Fire off the background tasks
+            generate_invoice.delay(order.id)
+            send_confirmation_email.delay(order.id)
+            notify_warehouse.delay(order.id)
+
             messages.success(request, f"Payment for Order #{order.id} was successful!")
             
         return redirect(f'/orders/{order.id}/')
