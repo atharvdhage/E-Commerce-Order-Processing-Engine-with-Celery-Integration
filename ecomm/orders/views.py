@@ -3,7 +3,7 @@ from django.contrib import messages
 from django.db import transaction
 from cart.models import Cart
 from .models import Order, OrderItem
-from .tasks import generate_invoice, send_confirmation_email, notify_warehouse
+from .tasks import process_professional_order, notify_warehouse
 
 def checkout(request):
     if not request.user.is_authenticated:
@@ -59,8 +59,7 @@ def process_payment(request, order_id):
             order.save() # The transaction is locked in
             
             # V3: Fire off the background tasks
-            generate_invoice.delay(order.id)
-            send_confirmation_email.delay(order.id)
+            process_professional_order.delay(order.id)
             notify_warehouse.delay(order.id)
 
             messages.success(request, f"Payment for Order #{order.id} was successful!")
