@@ -4,7 +4,7 @@
 {% block content %}
     <div style="display: flex; justify-content: space-between; align-items: baseline;">
         <h2>Order Receipt #{{ order.id }}</h2>
-        <span style="color: var(--text-muted);">{{ order.created_at|date:"M d, Y H:i" }}</span>
+        <span style="color: var(--text-muted);">{{ order.created_at|date("M d, Y H:i") }}</span>
     </div>
     
     <div style="background: var(--bg); padding: 20px; border-radius: 8px; border: 1px solid var(--border); margin-bottom: 25px;">
