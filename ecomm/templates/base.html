@@ -5,28 +5,63 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}E-Commerce Engine{% endblock %}</title>
     <style>
-        body { font-family: Arial, sans-serif; margin: 0; padding: 0; background-color: #f4f4f9; }
-        header { background-color: #333; color: white; padding: 1rem; display: flex; justify-content: space-between; }
-        header a { color: white; text-decoration: none; margin-left: 15px; }
-        .container { max-width: 1200px; margin: 20px auto; padding: 20px; background: white; border-radius: 8px; }
-        .messages { color: red; font-weight: bold; }
+        :root {
+            --bg: #0f172a;
+            --surface: #1e293b;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --primary: #6366f1;
+            --primary-hover: #4f46e5;
+            --danger: #ef4444;
+            --success: #10b981;
+            --border: #334155;
+        }
+        
+        body { font-family: system-ui, -apple-system, sans-serif; background: var(--bg); color: var(--text-main); margin: 0; padding: 0; line-height: 1.6; }
+        header { background: var(--surface); padding: 1.2rem 2rem; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3); }
+        header strong { font-size: 1.25rem; letter-spacing: 0.5px; color: var(--primary); }
+        header a { color: var(--text-main); text-decoration: none; margin-left: 20px; font-weight: 500; transition: color 0.2s; }
+        header a:hover { color: var(--primary); }
+        
+        .container { max-width: 1000px; margin: 40px auto; padding: 30px; background: var(--surface); border-radius: 12px; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.2); }
+        .messages { background: rgba(239, 68, 68, 0.1); color: var(--danger); padding: 15px; border-radius: 8px; border: 1px solid var(--danger); list-style: none; margin-bottom: 20px; }
+        
+        h2 { margin-top: 0; border-bottom: 1px solid var(--border); padding-bottom: 15px; color: var(--text-main); }
+        
+        /* Modern Table */
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; text-align: left; }
+        th { padding: 15px; border-bottom: 2px solid var(--border); color: var(--text-muted); font-weight: 600; text-transform: uppercase; font-size: 0.85rem; letter-spacing: 0.5px; }
+        td { padding: 15px; border-bottom: 1px solid var(--border); vertical-align: middle; }
+        
+        /* Buttons & Inputs */
+        button { background: var(--primary); color: white; border: none; padding: 10px 20px; border-radius: 6px; cursor: pointer; font-weight: 600; transition: all 0.2s; }
+        button:hover { background: var(--primary-hover); transform: translateY(-1px); }
+        button.danger { background: var(--danger); padding: 6px 12px; font-size: 0.9rem; }
+        button.danger:hover { background: #dc2626; }
+        button.success { background: var(--success); font-size: 1.1rem; padding: 12px 24px; }
+        button.success:hover { background: #059669; }
+        
+        input[type="number"] { background: var(--bg); border: 1px solid var(--border); color: var(--text-main); padding: 8px; border-radius: 4px; width: 60px; outline: none; }
+        input[type="number"]:focus { border-color: var(--primary); }
+        
+        /* Product Grid */
+        .product-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 25px; margin-top: 20px; }
+        .product-card { background: var(--bg); border: 1px solid var(--border); padding: 20px; border-radius: 10px; transition: transform 0.2s, box-shadow 0.2s; }
+        .product-card:hover { transform: translateY(-5px); box-shadow: 0 10px 20px rgba(0,0,0,0.2); border-color: var(--primary); }
+        .product-card h3 { margin: 0 0 10px 0; font-size: 1.2rem; }
+        .product-card .price { font-size: 1.25rem; font-weight: bold; color: var(--primary); margin: 10px 0; }
     </style>
 </head>
 <body>
-
     <header>
-        <div>
-            <strong>E-Commerce V1</strong>
-        </div>
+        <div><strong>E-Commerce V1</strong></div>
         <nav>
-            <!-- We will link these to your Django URLs later -->
             <a href="/">Catalog</a>
             <a href="/cart/">My Cart</a>
         </nav>
     </header>
 
     <div class="container">
-        <!-- Display Django messages (e.g., "Not enough stock" errors) -->
         {% if messages %}
             <ul class="messages">
                 {% for message in messages %}
@@ -35,20 +70,7 @@
             </ul>
         {% endif %}
 
-        <!-- Child templates will inject their content here -->
-        {% block content %}
-        {% endblock %}
+        {% block content %}{% endblock %}
     </div>
-
 </body>
 </html>
-
-<style>
-    :root { --bg: #f8fafc; --text: #0f172a; --primary: #4f46e5; --border: #e2e8f0; }
-    body { font-family: system-ui, sans-serif; background: var(--bg); color: var(--text); line-height: 1.5; margin: 0; padding: 20px; }
-    .container { max-width: 900px; margin: 0 auto; background: white; padding: 30px; border-radius: 8px; box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1); }
-    table { width: 100%; border-collapse: collapse; margin-top: 20px; }
-    th, td { padding: 12px; text-align: left; border-bottom: 1px solid var(--border); }
-    button { background: var(--primary); color: white; border: none; padding: 10px 20px; border-radius: 6px; cursor: pointer; font-weight: 600; }
-    button:hover { opacity: 0.9; }
-</style>

@@ -1,34 +1,30 @@
 {% extends 'base.html' %}
-
 {% block title %}Product Catalog{% endblock %}
 
 {% block content %}
     <h2>Product Catalog</h2>
     
-    <div style="display: flex; flex-wrap: wrap; gap: 20px;">
+    <div class="product-grid">
         {% for product in products %}
-            <div style="border: 1px solid #ddd; padding: 15px; border-radius: 5px; width: 250px;">
+            <div class="product-card">
                 <h3>{{ product.name }}</h3>
-                <p>Category: {{ product.category.name }}</p>
-                <p><strong>Price: ${{ product.price }}</strong></p>
+                <p style="color: var(--text-muted); margin: 0;">{{ product.category.name }}</p>
+                <div class="price">${{ product.price }}</div>
                 
                 {% if product.stock_quantity > 0 %}
-                    <p style="color: green;">In Stock: {{ product.stock_quantity }}</p>
+                    <p style="color: var(--success); font-size: 0.9rem; font-weight: 500;">In Stock: {{ product.stock_quantity }}</p>
                     
-                    <!-- Form to add to cart -->
-                    <form action="/cart/add/{{ product.id }}/" method="POST">
+                    <form action="/cart/add/{{ product.id }}/" method="POST" style="margin-top: 15px; display: flex; align-items: center; gap: 10px;">
                         {{ csrf_input }}
-                        <label for="quantity">Qty:</label>
-                        <!-- V1 Logic: Max constraint tied to database stock -->
-                        <input type="number" name="quantity" value="1" min="1" max="{{ product.stock_quantity }}" required style="width: 60px;">
-                        <button type="submit" style="margin-top: 10px;">Add to Cart</button>
+                        <input type="number" name="quantity" value="1" min="1" max="{{ product.stock_quantity }}" required>
+                        <button type="submit" style="flex-grow: 1;">Add to Cart</button>
                     </form>
                 {% else %}
-                    <p style="color: red;">Out of Stock</p>
+                    <p style="color: var(--danger); font-size: 0.9rem; font-weight: 500;">Out of Stock</p>
                 {% endif %}
             </div>
         {% else %}
-            <p>No products available right now.</p>
+            <p style="color: var(--text-muted);">No products available right now.</p>
         {% endfor %}
     </div>
 {% endblock %}

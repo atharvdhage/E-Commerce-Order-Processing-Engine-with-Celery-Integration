@@ -1,51 +1,54 @@
 {% extends 'base.html' %}
-
 {% block title %}Order #{{ order.id }}{% endblock %}
 
 {% block content %}
-    <h2>Order Receipt #{{ order.id }}</h2>
-    <p><strong>Status:</strong> {{ order.get_status_display }}</p>
-    <p><strong>Date:</strong> {{ order.created_at|date:"M d, Y H:i" }}</p>
+    <div style="display: flex; justify-content: space-between; align-items: baseline;">
+        <h2>Order Receipt #{{ order.id }}</h2>
+        <span style="color: var(--text-muted);">{{ order.created_at|date:"M d, Y H:i" }}</span>
+    </div>
     
-    <p><strong>Status:</strong> 
-        {% if order.status == 'SUCCESS' %}
-            <span style="color: green;">{{ order.get_status_display }}</span>
-        {% else %}
-            <span style="color: orange;">{{ order.get_status_display }}</span>
+    <div style="background: var(--bg); padding: 20px; border-radius: 8px; border: 1px solid var(--border); margin-bottom: 25px;">
+        <p style="margin: 0; font-size: 1.1rem;">
+            <strong>Status:</strong> 
+            {% if order.status == 'SUCCESS' %}
+                <span style="color: var(--success); font-weight: bold;">{{ order.get_status_display() }}</span>
+            {% else %}
+                <span style="color: #f59e0b; font-weight: bold;">{{ order.get_status_display() }}</span>
+            {% endif %}
+        </p>
+
+        {% if order.status == 'PENDING' %}
+            <form action="/orders/{{ order.id }}/pay/" method="POST" style="margin-top: 15px;">
+                {{ csrf_input }}
+                <button type="submit" class="success">Simulate Payment</button>
+            </form>
         {% endif %}
-    </p>
+    </div>
 
-    {% if order.status == 'PENDING' %}
-        <form action="/orders/{{ order.id }}/pay/" method="POST" style="margin-top: 15px;">
-            {{ csrf_input }}
-            <button type="submit" style="padding: 10px 20px; background-color: #007bff; color: white; border: none; cursor: pointer; border-radius: 4px;">
-                Simulate Payment
-            </button>
-        </form>
-    {% endif %}
-
-    <table style="width: 100%; border-collapse: collapse; text-align: left; margin-top: 20px;">
+    <table>
         <thead>
-            <tr style="border-bottom: 2px solid #333;">
-                <th style="padding: 10px;">Product</th>
-                <th style="padding: 10px;">Locked Price</th>
-                <th style="padding: 10px;">Quantity</th>
-                <th style="padding: 10px;">Total</th>
+            <tr>
+                <th>Product</th>
+                <th>Locked Price</th>
+                <th>Qty</th>
+                <th>Total</th>
             </tr>
         </thead>
         <tbody>
-            {% for item in order.items.all %}
-                <tr style="border-bottom: 1px solid #ddd;">
-                    <td style="padding: 10px;">{{ item.product.name|default:"Deleted Product" }}</td>
-                    <td style="padding: 10px;">${{ item.price_at_purchase }}</td>
-                    <td style="padding: 10px;">{{ item.quantity }}</td>
-                    <td style="padding: 10px;">${% widthratio item.price_at_purchase 1 item.quantity %}</td>
+            <!-- Jinja2 explicit method call for related manager -->
+            {% for item in order.items.all() %}
+                <tr>
+                    <!-- Jinja2 default syntax requires parentheses -->
+                    <td><strong>{{ item.product.name|default("Deleted Product") }}</strong></td>
+                    <td>${{ item.price_at_purchase }}</td>
+                    <td>{{ item.quantity }}</td>
+                    <td style="color: var(--primary); font-weight: bold;">${{ item.price_at_purchase * item.quantity }}</td>
                 </tr>
             {% endfor %}
         </tbody>
     </table>
 
-    <div style="margin-top: 20px;">
-        <a href="/" style="text-decoration: none; color: #4F46E5;">&larr; Back to Catalog</a>
+    <div style="margin-top: 30px;">
+        <a href="/" style="color: var(--primary); text-decoration: none; font-weight: 600;">&larr; Back to Catalog</a>
     </div>
 {% endblock %}
