@@ -11,8 +11,8 @@ https://docs.djangoproject.com/en/6.1/ref/settings/
 """
 
 from pathlib import Path
-import os
-import dj_database_url 
+import os 
+from urllib.parse import urlparse, unquote
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -82,8 +82,31 @@ WSGI_APPLICATION = 'ecomm.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/6.1/ref/settings/#databases
 
-DATABASES = { 'default': dj_database_url.config( default=f'sqlite:///{BASE_DIR / "db.sqlite3"}', conn_max_age=600, ) }
-
+# DATABASES = { 'default': dj_database_url.config( default=f'sqlite:///{BASE_DIR / "db.sqlite3"}', conn_max_age=600, ) }
+# Database
+# https://docs.djangoproject.com/en/6.1/ref/settings/#databases
+database_url = os.environ.get("DATABASE_URL")
+if database_url:
+    parsed_database_url = urlparse(database_url)
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.postgresql",
+            "NAME": parsed_database_url.path.lstrip("/"),
+            "USER": unquote(parsed_database_url.username or ""),
+            "PASSWORD": unquote(parsed_database_url.password or ""),
+            "HOST": parsed_database_url.hostname,
+            "PORT": parsed_database_url.port or 5432,
+            "CONN_MAX_AGE": 600,
+            "OPTIONS": ({"sslmode": os.environ["PGSSLMODE"]} if os.environ.get("PGSSLMODE") else {}),
+        }
+    }
+else:
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.sqlite3",
+            "NAME": BASE_DIR / "db.sqlite3",
+        }
+    }
 
 # Password validation
 # https://docs.djangoproject.com/en/6.1/ref/settings/#auth-password-validators
