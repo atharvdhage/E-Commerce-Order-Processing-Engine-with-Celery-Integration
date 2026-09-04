@@ -17,7 +17,7 @@
                     
                     <!-- Form to add to cart -->
                     <form action="/cart/add/{{ product.id }}/" method="POST">
-                        {% csrf_token %}
+                        {{ csrf_input }}
                         <label for="quantity">Qty:</label>
                         <!-- V1 Logic: Max constraint tied to database stock -->
                         <input type="number" name="quantity" value="1" min="1" max="{{ product.stock_quantity }}" required style="width: 60px;">

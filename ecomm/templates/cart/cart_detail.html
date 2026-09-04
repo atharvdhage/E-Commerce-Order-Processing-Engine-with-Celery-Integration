@@ -27,7 +27,7 @@
                         <!-- NEW: The Remove Button Form -->
                         <td style="padding: 10px;">
                             <form action="/cart/remove/{{ item.id }}/" method="POST">
-                                {% csrf_token %}
+                                {{ csrf_input }}
                                 <button type="submit" style="background-color: #dc3545; color: white; border: none; padding: 5px 10px; cursor: pointer; border-radius: 3px;">
                                     Remove
                                 </button>
