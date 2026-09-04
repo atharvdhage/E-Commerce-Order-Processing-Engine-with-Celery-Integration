@@ -3,6 +3,7 @@ from django.contrib import messages
 from django.db import transaction
 from cart.models import Cart
 from .models import Order, OrderItem
+from .tasks import generate_invoice, send_confirmation_email, notify_warehouse
 
 def checkout(request):
     if not request.user.is_authenticated:
